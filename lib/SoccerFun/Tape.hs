@@ -1,9 +1,8 @@
-{-# LANGUAGE UnicodeSyntax, TemplateHaskell #-}
+{-# LANGUAGE UnicodeSyntax, StandaloneDeriving, DeriveGeneric #-}
 -- | record a match to a tape which is serialisable
 module SoccerFun.Tape where
 
 import Prelude.Unicode
-import Data.DeriveTH
 import Data.Binary
 import SoccerFun.MatchControl
 import SoccerFun.Player
@@ -14,6 +13,7 @@ import SoccerFun.Ball
 import SoccerFun.RefereeAction
 import Control.Monad
 import Codec.Compression.GZip
+import GHC.Generics
 
 instance Binary Match where
 	put m = do
@@ -82,24 +82,42 @@ instance Binary Player where
 	 	 	 health = health,
 	 	 	 brain = undefined}
 
-$( derive makeBinary ''Half )
-$( derive makeBinary ''Field )
-$( derive makeBinary ''Position3D )
-$( derive makeBinary ''Ball )
-$( derive makeBinary ''BallState )
-$( derive makeBinary ''PlayerID )
-$( derive makeBinary ''Position )
-$( derive makeBinary ''Speed )
-$( derive makeBinary ''Skill )
-$( derive makeBinary ''PlayerEffect )
-$( derive makeBinary ''Success )
-$( derive makeBinary ''Speed3D )
-$( derive makeBinary ''FeintDirection )
-$( derive makeBinary ''RefereeAction )
-$( derive makeBinary ''PlayerAction )
-$( derive makeBinary ''Edge )
-$( derive makeBinary ''ATeam )
-$( derive makeBinary ''Reprimand )
+deriving instance Generic Half
+instance Binary Half
+deriving instance Generic Field
+instance Binary Field
+deriving instance Generic Position3D
+instance Binary Position3D
+deriving instance Generic Ball
+instance Binary Ball
+deriving instance Generic BallState
+instance Binary BallState
+deriving instance Generic PlayerID
+instance Binary PlayerID
+deriving instance Generic Position
+instance Binary Position
+deriving instance Generic Speed
+instance Binary Speed
+deriving instance Generic Skill
+instance Binary Skill
+deriving instance Generic PlayerEffect
+instance Binary PlayerEffect
+deriving instance Generic Success
+instance Binary Success
+deriving instance Generic Speed3D
+instance Binary Speed3D
+deriving instance Generic FeintDirection
+instance Binary FeintDirection
+deriving instance Generic RefereeAction
+instance Binary RefereeAction
+deriving instance Generic PlayerAction
+instance Binary PlayerAction
+deriving instance Generic Edge
+instance Binary Edge
+deriving instance Generic ATeam
+instance Binary ATeam
+deriving instance Generic Reprimand
+instance Binary Reprimand
 
 
 data Tape = Tape [Step]

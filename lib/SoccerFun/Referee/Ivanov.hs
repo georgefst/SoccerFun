@@ -273,8 +273,8 @@ refBrainIvanov field time dt ballState half team1 team2 (longTermMemory,seed) = 
 	-- YES: there were tackles last round, whistle for that and ignore all other irrelative events
 	analyseTackles shortTermMemory team1Actions team2Actions (((victim@PlayerID {playerNo=vNmbr},victimPos,victimHealth), (offender@PlayerID {clubName=oCn,playerNo=oNmbr},offenderPos,offenderHealth), velo) : _) seed = runIdentity $ do -- PA: hmmm, tl of tackles are ignored here.
 		offendersTeam ← return $ if nameOf team1 == oCn then Team1 else Team2
-		Just victimNow ← return $ find (identifyPlayer victim) allPlayers
-		Just offenderNow ← return $ find (identifyPlayer offender) allPlayers
+		let victimNow = fromMaybe (error "victim not found") $ find (identifyPlayer victim) allPlayers
+		let offenderNow = fromMaybe (error "offender not found") $ find (identifyPlayer offender) allPlayers
 		shortTermMemory ← return $ shortTermMemory { gameStoppedForTackle = True}
 	-- was the ball near the tackle event(s)
 		punishScore ← return $ if dist (pxy (ballPos theBall)) offenderPos <= 6.0 then 2 else 1 -- ball was near tackle event(s)
