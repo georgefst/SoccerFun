@@ -1,6 +1,6 @@
 {-# LANGUAGE UnicodeSyntax, TypeSynonymInstances, ExistentialQuantification #-}
 {-| This module defines the Soccer-Fun API that is concerned with teams.
-	All available teams are collected in this module (allAvailableTeams).
+    All available teams are collected in this module (allAvailableTeams).
 -}
 module SoccerFun.Team where
 
@@ -15,52 +15,52 @@ type Team = [Player] -- ^ the fielders are supposed to have different numbers, a
 
 validateTeam ∷ Team → Team
 validateTeam team = map validatePlayer team
-	where
---	validatePlayer ∷ Player → Player
-	validatePlayer (fb@Player{height=height})
-		= fb {height = height `boundedBy` (minHeight,maxHeight)
-			  , stamina = maxStamina
-			  , health = maxHealth
-		  }
+    where
+--    validatePlayer ∷ Player → Player
+    validatePlayer (fb@Player{height=height})
+        = fb {height = height `boundedBy` (minHeight,maxHeight)
+              , stamina = maxStamina
+              , health = maxHealth
+          }
 replaceInTeam ∷ [Player] → Team → Team
 replaceInTeam fbs team = (team \\ fbs) ++ fbs
 
 getTeam ∷ ClubName → [Team] → Team
 getTeam cn teams = case [team | team<-teams, nameOf team==cn] of
-	(team:_) → team
-	_ → error ("Team " ++ show cn ++ " does not seem to exist.\n")
+    (team:_) → team
+    _ → error ("Team " ++ show cn ++ " does not seem to exist.\n")
 
 class Mirror a where mirror ∷ Field → a → a
 
 instance NameOf Team where
-	nameOf players
-		= case players of
-			(fb:_) → nameOf (playerID fb)
-			none → error "nameOf[Team]: applied to empty team.\n"
+    nameOf players
+        = case players of
+            (fb:_) → nameOf (playerID fb)
+            none → error "nameOf[Team]: applied to empty team.\n"
 
 isValidTeam ∷ Team → Bool
 isValidTeam team = length clubNames == 1
-							&&
-						  (null keepers || isValidKeeper (head keepers))
-							&&
-						  all isValidPlayer players
-							&&
-						  sort (map nrOf players) == sort (nub (map nrOf players))
-							&&
-						  not (elem 1 (map nrOf fielders))
-	where
-	(keepers,fielders) = spanfilter isKeeper team
-	clubNames = nub (map clubOf players)
-	clubName' = head clubNames ∷ String
-	players = keepers ++ fielders
-	clubOf fb = clubName (playerID fb)
-	nrOf fb = playerNo (playerID fb)
-	isValidKeeper fb = (playerID fb) == PlayerID {clubName=clubName',playerNo=1}
-	isValidPlayer fb = clubOf fb == clubName'
+                            &&
+                          (null keepers || isValidKeeper (head keepers))
+                            &&
+                          all isValidPlayer players
+                            &&
+                          sort (map nrOf players) == sort (nub (map nrOf players))
+                            &&
+                          not (elem 1 (map nrOf fielders))
+    where
+    (keepers,fielders) = spanfilter isKeeper team
+    clubNames = nub (map clubOf players)
+    clubName' = head clubNames ∷ String
+    players = keepers ++ fielders
+    clubOf fb = clubName (playerID fb)
+    nrOf fb = playerNo (playerID fb)
+    isValidKeeper fb = (playerID fb) == PlayerID {clubName=clubName',playerNo=1}
+    isValidPlayer fb = clubOf fb == clubName'
 
 instance Other ATeam where
-	other Team1 = Team2
-	other Team2 = Team1
+    other Team1 = Team2
+    other Team2 = Team1
 
 instance Mirror a ⇒ Mirror [a] where mirror field as = map (mirror field) as
 instance Mirror Player where mirror field fb = fb {pos = mirror field (pos fb)

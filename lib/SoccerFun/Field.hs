@@ -6,9 +6,9 @@ import SoccerFun.Types (Other (other))
 import Data.Typeable
 
 data Field = Field
-	{fwidth ∷ FieldWidth, -- ^ width of ball field (64m <=width <=75m)
-	 flength ∷ FieldLength -- ^ height of ball field (100m<=height<=110m)
-	} deriving (Show, Typeable)
+    {fwidth ∷ FieldWidth, -- ^ width of ball field (64m <=width <=75m)
+     flength ∷ FieldLength -- ^ height of ball field (100m<=height<=110m)
+    } deriving (Show, Typeable)
 
 type FieldWidth = Metre
 type FieldLength = Metre
@@ -18,16 +18,16 @@ defaultField = Field { fwidth = 75.0, flength = 110.0 }
 
 inPenaltyArea ∷ Field → Home → Position → Bool
 inPenaltyArea field home pos = northEdge <= py pos && py pos <= southEdge && if home == West then px pos <= westEdge else px pos >= eastEdge where
-	northEdge = fwidth field / 2 - radiusPenaltyArea
-	southEdge = fwidth field / 2 + radiusPenaltyArea
-	westEdge  = penaltyAreaDepth
-	eastEdge  = flength field - penaltyAreaDepth
+    northEdge = fwidth field / 2 - radiusPenaltyArea
+    southEdge = fwidth field / 2 + radiusPenaltyArea
+    westEdge  = penaltyAreaDepth
+    eastEdge  = flength field - penaltyAreaDepth
 
 data Home = West | East deriving (Eq,Show,Typeable)
 
 instance Other Home where
-	other West = East
-	other East = West
+    other West = East
+    other East = West
 
 isWest ∷ Home → Bool
 isWest West = True
@@ -43,8 +43,8 @@ centre f = Position (flength f / 2) (fwidth f / 2)
 -- | goalPoles yields the py coordinates of the north pole and south pole of the goal (note that north < south).
 goalPoles ∷ Field → (Metre,Metre)
 goalPoles field = (northPole,southPole) where
-	northPole = ((fwidth field)-goalWidth)/2.0
-	southPole = northPole + goalWidth
+    northPole = ((fwidth field)-goalWidth)/2.0
+    southPole = northPole + goalWidth
 
 -- | Official metrics of a ball field:
 radiusCentreCircle = 9.15 ∷ Float

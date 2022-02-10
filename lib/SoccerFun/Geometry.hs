@@ -13,9 +13,9 @@ type YPos = Metre
 type ZPos = Metre
 
 data Position = Position
-	{px ∷ XPos, -- ^ x-coordinate in plane (0.0<=px)
-	 py ∷ YPos  -- ^ y-coordinate in plane (0.0<=py)
-	} deriving (Show,Eq)
+    {px ∷ XPos, -- ^ x-coordinate in plane (0.0<=px)
+     py ∷ YPos  -- ^ y-coordinate in plane (0.0<=py)
+    } deriving (Show,Eq)
 
 data Position3D = Position3D {pxy ∷ Position, pz ∷ ZPos} deriving (Show,Eq)
 
@@ -29,25 +29,25 @@ type ZRadius = Metre
 -- position3D is within the cube around #param5 with measures of #param2t/m4
 inRadiusOfPosition ∷ Position3D → XRadius → YRadius → ZRadius → Position → Bool
 inRadiusOfPosition pos1 xr yr zr pos2 = let
-		(x1,y1,z1) = coordinates pos1
-		Position x2 y2 = pos2
-	in x2+xr >= x1 && x1 >= x2-xr && y2+yr >= y1 && y1 >= y2-yr && z1 <= zr
+        (x1,y1,z1) = coordinates pos1
+        Position x2 y2 = pos2
+    in x2+xr >= x1 && x1 >= x2-xr && y2+yr >= y1 && y1 >= y2-yr && z1 <= zr
 
 type Angle = Radian -- ^ angle in radians, clockwise
 type Radian = Float
 
 angleHowFarFromPi ∷ Angle → Angle
 angleHowFarFromPi a = toRadian (if (a' > 180) then (360 - a') else a')
-	where
-	a' = fromRadian (abs a)
+    where
+    a' = fromRadian (abs a)
 
 angleHowFarFromAngle ∷ Angle → Angle → Angle
 angleHowFarFromAngle a b
-	| a' > b' = if a' - b' > 180 then toRadian (b' - a' + 360) else toRadian (a' - b')
-	| otherwise =  if b' - a' > 180 then toRadian (a' - b' + 360) else toRadian (b' - a')
-	where
-	a' = fromRadian (abs a)
-	b' = fromRadian (abs b)
+    | a' > b' = if a' - b' > 180 then toRadian (b' - a' + 360) else toRadian (a' - b')
+    | otherwise =  if b' - a' > 180 then toRadian (a' - b' + 360) else toRadian (b' - a')
+    where
+    a' = fromRadian (abs a)
+    b' = fromRadian (abs b)
 
 -- | @movePoint v p@ moves point p over vector v.
 movePoint ∷ RVector → Position → Position
@@ -61,56 +61,56 @@ movePoint3D (RVector3D dxy dz) (Position3D pxy pz) = Position3D (movePoint dxy p
 -- | @(a,b)@.
 pointToRectangle ∷ (Position,Position) → Position → Position
 pointToRectangle (a,b) c
-	| pointInRectangle (a,b) c = c
-	| otherwise = let (x,y) = c' in Position x y
-	where
-	(minX,maxX) = minmax ((px a),(px b))
-	(minY,maxY) = minmax ((py a),(py b))
-	left = (px c) <= minX
-	right = (px c) >= maxX
-	above = (py c) <= minY
-	below = (py c) >= maxY
+    | pointInRectangle (a,b) c = c
+    | otherwise = let (x,y) = c' in Position x y
+    where
+    (minX,maxX) = minmax ((px a),(px b))
+    (minY,maxY) = minmax ((py a),(py b))
+    left = (px c) <= minX
+    right = (px c) >= maxX
+    above = (py c) <= minY
+    below = (py c) >= maxY
 
-	c' | left && above = (minX,minY)
-	   | right && above = (maxX,minY)
-	   | left && below = (minX,maxY)
-	   | right && below = (maxX,maxY)
-	   | above = ((px c), minY)
-	   | below = ((px c), maxY)
-	   | left = (minX,(py c) )
-	   | right = (maxX,(py c) )
-	   | otherwise = error ("unsuspected error; please rotate with angles between pi and -pi\n")
+    c' | left && above = (minX,minY)
+       | right && above = (maxX,minY)
+       | left && below = (minX,maxY)
+       | right && below = (maxX,maxY)
+       | above = ((px c), minY)
+       | below = ((px c), maxY)
+       | left = (minX,(py c) )
+       | right = (maxX,(py c) )
+       | otherwise = error ("unsuspected error; please rotate with angles between pi and -pi\n")
 
 -- | @pointInRectangle (a,b) c@
 -- | returns @True@ iff point @c@ is inside the rectangle determined by
 -- | the diagonal corner points @a@ and @b@.
 pointInRectangle ∷ (Position,Position) → Position → Bool
 pointInRectangle (a,b) c = minX ≤ px c ∧ px c ≤ maxX ∧ minY ≤ py c ∧ py c ≤ maxY where
-	(minX,maxX) = minmax ((px a),(px b))
-	(minY,maxY) = minmax ((py a),(py b))
+    (minX,maxX) = minmax ((px a),(px b))
+    (minY,maxY) = minmax ((py a),(py b))
 
 inCircleRadiusOfPosition ∷ Position3D → XRadius → ZRadius → Position → Bool
 inCircleRadiusOfPosition (Position3D pxy pz) r zr pos
-	= dist pxy pos <= r && pz <= zr
+    = dist pxy pos <= r && pz <= zr
 
 data RVector = RVector
-	{dx ∷ Metre, -- ^ difference in x-coordinate @|dx| <= 1.0@
-	 dy ∷ Metre  -- ^ difference in y-coordinate @|dy| <= 1.0@
-	} deriving (Show,Eq)
+    {dx ∷ Metre, -- ^ difference in x-coordinate @|dx| <= 1.0@
+     dy ∷ Metre  -- ^ difference in y-coordinate @|dy| <= 1.0@
+    } deriving (Show,Eq)
 
 data RVector3D = RVector3D {dxy ∷ RVector, dz ∷ Metre} deriving (Show,Eq)
 
 -- | speed of an object
 data Speed = Speed
-	{direction ∷ Angle,   -- ^ direction of object
-	 velocity  ∷ Velocity -- ^ velocity of object
-	} deriving (Show,Eq)
+    {direction ∷ Angle,   -- ^ direction of object
+     velocity  ∷ Velocity -- ^ velocity of object
+    } deriving (Show,Eq)
 
 -- | speed of an object in space
 data Speed3D = Speed3D
-	{vxy ∷ Speed,   -- ^ surface speed of object
-	 vz  ∷ Velocity -- ^ velocity in z-axis (positive: goes up; negative: goes down; 0: horizontally)
-	} deriving (Show,Eq)
+    {vxy ∷ Speed,   -- ^ surface speed of object
+     vz  ∷ Velocity -- ^ velocity in z-axis (positive: goes up; negative: goes down; 0: horizontally)
+    } deriving (Show,Eq)
 
 type Velocity = Float -- ^ velocity in metre/second
 
@@ -120,52 +120,52 @@ class ToSpeed3D a where toSpeed3D ∷ a → Speed3D
 class FromSpeed3D a where fromSpeed3D ∷ Speed3D → a
 
 instance Num RVector3D where
-	p1 + p2 = RVector3D {dxy = dxy p1 + dxy p2, dz = dz p1 + dz p2}
-	p1 * p2 = RVector3D {dxy = dxy p1 * dxy p2, dz = dz p1 * dz p2}
-	p1 - p2 = RVector3D {dxy = dxy p1 - dxy p2, dz = dz p1 - dz p2}
-	abs p = RVector3D {dxy = abs $ dxy p, dz = abs $ dz p}
-	signum p = RVector3D {dxy = signum $ dxy p, dz = signum $ dz p}
-	fromInteger i = RVector3D {dxy = fromInteger i, dz = 0}
+    p1 + p2 = RVector3D {dxy = dxy p1 + dxy p2, dz = dz p1 + dz p2}
+    p1 * p2 = RVector3D {dxy = dxy p1 * dxy p2, dz = dz p1 * dz p2}
+    p1 - p2 = RVector3D {dxy = dxy p1 - dxy p2, dz = dz p1 - dz p2}
+    abs p = RVector3D {dxy = abs $ dxy p, dz = abs $ dz p}
+    signum p = RVector3D {dxy = signum $ dxy p, dz = signum $ dz p}
+    fromInteger i = RVector3D {dxy = fromInteger i, dz = 0}
 
 instance Num Speed3D where
-	p1 + p2 = Speed3D {vxy = vxy p1 + vxy p2, vz = vz p1 + vz p2}
-	p1 * p2 = Speed3D {vxy = vxy p1 * vxy p2, vz = vz p1 * vz p2}
-	p1 - p2 = Speed3D {vxy = vxy p1 - vxy p2, vz = vz p1 - vz p2}
-	abs p = Speed3D {vxy = abs $ vxy p, vz = abs $ vz p}
-	signum p = Speed3D {vxy = signum $ vxy p, vz = signum $ vz p}
-	fromInteger i = Speed3D {vxy = fromInteger i, vz = 0}
+    p1 + p2 = Speed3D {vxy = vxy p1 + vxy p2, vz = vz p1 + vz p2}
+    p1 * p2 = Speed3D {vxy = vxy p1 * vxy p2, vz = vz p1 * vz p2}
+    p1 - p2 = Speed3D {vxy = vxy p1 - vxy p2, vz = vz p1 - vz p2}
+    abs p = Speed3D {vxy = abs $ vxy p, vz = abs $ vz p}
+    signum p = Speed3D {vxy = signum $ vxy p, vz = signum $ vz p}
+    fromInteger i = Speed3D {vxy = fromInteger i, vz = 0}
 
 instance Num Position3D where
-	p1 + p2 = Position3D {pxy = pxy p1 + pxy p2, pz = pz p1 + pz p2}
-	p1 * p2 = Position3D {pxy = pxy p1 * pxy p2, pz = pz p1 * pz p2}
-	p1 - p2 = Position3D {pxy = pxy p1 - pxy p2, pz = pz p1 - pz p2}
-	abs p = Position3D {pxy = abs $ pxy p, pz = abs $ pz p}
-	signum p = Position3D {pxy = signum $ pxy p, pz = signum $ pz p}
-	fromInteger i = Position3D {pxy = fromInteger i, pz = 0}
+    p1 + p2 = Position3D {pxy = pxy p1 + pxy p2, pz = pz p1 + pz p2}
+    p1 * p2 = Position3D {pxy = pxy p1 * pxy p2, pz = pz p1 * pz p2}
+    p1 - p2 = Position3D {pxy = pxy p1 - pxy p2, pz = pz p1 - pz p2}
+    abs p = Position3D {pxy = abs $ pxy p, pz = abs $ pz p}
+    signum p = Position3D {pxy = signum $ pxy p, pz = signum $ pz p}
+    fromInteger i = Position3D {pxy = fromInteger i, pz = 0}
 
 instance Num RVector where
-	p1 + p2 = RVector {dx = dx p1 + dx p2, dy = dy p1 + dy p2}
-	p1 * p2 = RVector {dx = dx p1 * dx p2, dy = dy p1 * dy p2}
-	p1 - p2 = RVector {dx = dx p1 - dx p2, dy = dy p1 - dy p2}
-	abs p = RVector {dx = abs $ dx p, dy = abs $ dy p}
-	signum p = RVector {dx = signum $ dx p, dy = signum $ dy p}
-	fromInteger i = RVector {dx = fromInteger i, dy = 0}
+    p1 + p2 = RVector {dx = dx p1 + dx p2, dy = dy p1 + dy p2}
+    p1 * p2 = RVector {dx = dx p1 * dx p2, dy = dy p1 * dy p2}
+    p1 - p2 = RVector {dx = dx p1 - dx p2, dy = dy p1 - dy p2}
+    abs p = RVector {dx = abs $ dx p, dy = abs $ dy p}
+    signum p = RVector {dx = signum $ dx p, dy = signum $ dy p}
+    fromInteger i = RVector {dx = fromInteger i, dy = 0}
 
 instance Num Position where
-	p1 + p2 = Position {px = px p1 + px p2, py = py p1 + py p2}
-	p1 * p2 = Position {px = px p1 * px p2, py = py p1 * py p2}
-	p1 - p2 = Position {px = px p1 - px p2, py = py p1 - py p2}
-	abs p = Position {px = abs $ px p, py = abs $ py p}
-	signum p = Position {px = signum $ px p, py = signum $ py p}
-	fromInteger i = Position {px = fromInteger i, py = 0}
+    p1 + p2 = Position {px = px p1 + px p2, py = py p1 + py p2}
+    p1 * p2 = Position {px = px p1 * px p2, py = py p1 * py p2}
+    p1 - p2 = Position {px = px p1 - px p2, py = py p1 - py p2}
+    abs p = Position {px = abs $ px p, py = abs $ py p}
+    signum p = Position {px = signum $ px p, py = signum $ py p}
+    fromInteger i = Position {px = fromInteger i, py = 0}
 
 instance Num Speed where
-	p1 + p2 = Speed {direction = direction p1 + direction p2, velocity = velocity p1 + velocity p2}
-	p1 * p2 = Speed {direction = direction p1 * direction p2, velocity = velocity p1 * velocity p2}
-	p1 - p2 = Speed {direction = direction p1 - direction p2, velocity = velocity p1 - velocity p2}
-	abs p = Speed {direction = abs $ direction p, velocity = abs $ velocity p}
-	signum p = Speed {direction = signum $ direction p, velocity = signum $ velocity p}
-	fromInteger i = Speed {direction = fromInteger i, velocity = 0}
+    p1 + p2 = Speed {direction = direction p1 + direction p2, velocity = velocity p1 + velocity p2}
+    p1 * p2 = Speed {direction = direction p1 * direction p2, velocity = velocity p1 * velocity p2}
+    p1 - p2 = Speed {direction = direction p1 - direction p2, velocity = velocity p1 - velocity p2}
+    abs p = Speed {direction = abs $ direction p, velocity = abs $ velocity p}
+    signum p = Speed {direction = signum $ direction p, velocity = signum $ velocity p}
+    fromInteger i = Speed {direction = fromInteger i, velocity = 0}
 
 class ToRVector a where toRVector ∷ a → RVector
 
@@ -196,12 +196,12 @@ toRadian a = (fromIntegral a) * pi / 180.0
 -- | @betweenPoints (a,b) c@ returns True iff c is on the line between a and b.
 betweenPoints ∷ (Position,Position) → Position → Bool
 betweenPoints (a,b) c
-	= pointInRectangle (a,b) c && dcx / dcy == dx / dy
-	where
-	(minX:maxX:_) = sort [(px a),(px b)]
-	(minY:maxY:_) = sort [(py a),(py b)]
-	(dx, dy) = ((px a) - (px b), (py a) - (py b))
-	(dcx,dcy) = ((px a) - (px c), (py a) - (py c))
+    = pointInRectangle (a,b) c && dcx / dcy == dx / dy
+    where
+    (minX:maxX:_) = sort [(px a),(px b)]
+    (minY:maxY:_) = sort [(py a),(py b)]
+    (dx, dy) = ((px a) - (px b), (py a) - (py b))
+    (dcx,dcy) = ((px a) - (px c), (py a) - (py c))
 
 -- | interpret Float as angle in radians
 instance ToRVector Float where toRVector angle = RVector {dx=cos angle,dy=sin angle}
@@ -242,37 +242,37 @@ instance FromSpeed3D Speed where fromSpeed3D s = (vxy s)
 
 oppositeAngle ∷ Angle → Angle
 oppositeAngle a
-	| newAngle < (-pi) = newAngle + 2.0*pi
-	| otherwise = newAngle
-	where
-	newAngle = a - pi
+    | newAngle < (-pi) = newAngle + 2.0*pi
+    | otherwise = newAngle
+    where
+    newAngle = a - pi
 
 angleWithObject ∷ Position → Position → Angle
 angleWithObject base target
-	| a >= 0.5*pi = if b >= 0 then a - pi else -b
-	| otherwise   = if b >= 0 then b - pi else pi + b
---	| a >= 0.5*pi && b >= 0 = ((-pi)+a) -- linksvoor, naar boven, negatieve hoek, -0.5*pi < hoek < 0
---	| a <= 0.5*pi && b >= 0 = (-pi)+b -- linksachter, naar beneden, negatieve hoek, -0.5*pi < hoek < -pi
---	| a <= 0.5*pi && b <= 0 = pi+b -- rechtsachter, naar beneden, positieve hoek, 0.5*pi < hoek < pi
---	| a >= 0.5*pi && b <= 0 = (-b) -- rechtsvoor, naar boven, positieve hoek, 0 < hoek < 0.5*pi
-	where
-	v = RVector (px base-px target) (py base-py target)
-	d = dist base target
-	a = acos (max1 ((dx v) / d))
-	b = asin (max1 ((dy v) / d))
+    | a >= 0.5*pi = if b >= 0 then a - pi else -b
+    | otherwise   = if b >= 0 then b - pi else pi + b
+--    | a >= 0.5*pi && b >= 0 = ((-pi)+a) -- linksvoor, naar boven, negatieve hoek, -0.5*pi < hoek < 0
+--    | a <= 0.5*pi && b >= 0 = (-pi)+b -- linksachter, naar beneden, negatieve hoek, -0.5*pi < hoek < -pi
+--    | a <= 0.5*pi && b <= 0 = pi+b -- rechtsachter, naar beneden, positieve hoek, 0.5*pi < hoek < pi
+--    | a >= 0.5*pi && b <= 0 = (-b) -- rechtsvoor, naar boven, positieve hoek, 0 < hoek < 0.5*pi
+    where
+    v = RVector (px base-px target) (py base-py target)
+    d = dist base target
+    a = acos (max1 ((dx v) / d))
+    b = asin (max1 ((dy v) / d))
 
-	max1 ∷ Float → Float
-	max1 r
-		| r < -1.0 = -1.0
-		| r > 1.0 = 1.0
-		| otherwise = r
+    max1 ∷ Float → Float
+    max1 r
+        | r < -1.0 = -1.0
+        | r > 1.0 = 1.0
+        | otherwise = r
 
 -- | gets the angle between two objects
 -- | positive angle is CW, negative is CCW
 angleWithObjectForRun ∷ (Position,Angle) → Position → Angle
 angleWithObjectForRun (base,angle) target
-	| newAngle > pi = newAngle - 2.0*pi
-	| newAngle < (-pi) = newAngle + 2.0*pi
-	| otherwise = newAngle
-	where
-	newAngle = angleWithObject base target - angle
+    | newAngle > pi = newAngle - 2.0*pi
+    | newAngle < (-pi) = newAngle + 2.0*pi
+    | otherwise = newAngle
+    where
+    newAngle = angleWithObject base target - angle

@@ -40,14 +40,14 @@ bounceBall Back (speed@Speed3D{vxy=sp2d@Speed{direction=d}},seed) = let (p,seed1
 
 ------------------------------------------------------------------------------
 
-radiusBall		∷ Float -- ^ officially it should be 0.113m, but that turns out to be too small for rendering
-radiusBall		= 0.4
+radiusBall        ∷ Float -- ^ officially it should be 0.113m, but that turns out to be too small for rendering
+radiusBall        = 0.4
 
-surfaceResistance	∷ Float -- ^ maximum speed of ball when moving over surface
-surfaceResistance	= 0.85
+surfaceResistance    ∷ Float -- ^ maximum speed of ball when moving over surface
+surfaceResistance    = 0.85
 
-airResistance		∷ Float -- ^ maximum speed of ball when moving through air (should depend on velocity)
-airResistance		= 0.95
+airResistance        ∷ Float -- ^ maximum speed of ball when moving through air (should depend on velocity)
+airResistance        = 0.95
 
-accellerationSec	∷ Float -- ^ acceleration difference per square second
-accellerationSec	= 9.81
+accellerationSec    ∷ Float -- ^ acceleration difference per square second
+accellerationSec    = 9.81

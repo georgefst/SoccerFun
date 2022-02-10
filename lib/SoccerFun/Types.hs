@@ -25,14 +25,14 @@ type PlayersNumber = Int
 
 --thinkS ∷ inp → State (Brain inp out) out
 --thinkS i = do
---	Brain m ai ← get
---	let (o, m') = runState (ai i) m
---	put $ Brain m' ai
---	return o
+--    Brain m ai ← get
+--    let (o, m') = runState (ai i) m
+--    put $ Brain m' ai
+--    return o
 
 --think ∷ Brain inp out → inp → (Brain inp out, out)
 --think (Brain m ai) i = (Brain m' ai, o) where
---	(o, m') = runState (ai i) m
+--    (o, m') = runState (ai i) m
 
 
 -- | If the referee gives a second yellow he should add red to it himself

@@ -18,9 +18,9 @@ import qualified TEAM2.Team as Team2
 
 main ∷ IO ()
 main = do
-	tape ← liftM recordMatch $ setupMatch Team1.team Team2.team
-	encodeFile (TOSTRING(TEAM1) ⧺ "-" ⧺ TOSTRING(TEAM2) ⧺ ".sft") tape
-	let Tape steps = tape
-	    endOfMatch = snd (last steps)
-	    finalScore = score endOfMatch
-	putStrLn $ show (fst finalScore) ⧺ " / " ⧺ show (snd finalScore)
+    tape ← liftM recordMatch $ setupMatch Team1.team Team2.team
+    encodeFile (TOSTRING(TEAM1) ⧺ "-" ⧺ TOSTRING(TEAM2) ⧺ ".sft") tape
+    let Tape steps = tape
+        endOfMatch = snd (last steps)
+        finalScore = score endOfMatch
+    putStrLn $ show (fst finalScore) ⧺ " / " ⧺ show (snd finalScore)

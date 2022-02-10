@@ -1,5 +1,5 @@
 run:
-	sfRunMatch Children Children
+    sfRunMatch Children Children
 
 clean:
-	rm -f */*.o */*.hi
+    rm -f */*.o */*.hi

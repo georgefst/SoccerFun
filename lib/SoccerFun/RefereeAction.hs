@@ -6,30 +6,30 @@ import SoccerFun.Geometry
 import SoccerFun.Field
 
 data RefereeAction
-	= ReprimandPlayer PlayerID Reprimand -- ^ player with given name receives reprimand
-	| Hands PlayerID                     -- ^ person is seen for doing hands
-	| TackleDetected PlayerID            -- ^ person is seen for doing tackle
-	| SchwalbeDetected PlayerID          -- ^ person is seen for doing schwalbe
-	| TheaterDetected PlayerID
-	| DangerousPlay PlayerID             -- ^ person is seen for doing dangerous actions
-	| GameOver                           -- ^ end of game
-	| PauseGame                          -- ^ game is paused
-	| AddTime ExtraTime                  -- ^ extra time is added to the game
-	| EndHalf                            -- ^ first half is over, teams go for a second half
-	| Goal ATeam                         -- ^ team playing at home has scored
-	| Offside PlayerID                   -- ^ player is offside at Home
-	| DirectFreeKick ATeam Position      -- ^ a direct free kick is granted for team home at given position
-	| GoalKick ATeam                     -- ^ a goal kick is granted for team home
-	| Corner ATeam Edge                  -- ^ a corner kick is granted for team home
-	| ThrowIn ATeam Position             -- ^ a throw in ball is granted for team home at given position
-	| Penalty ATeam                      -- ^ penalty at homeside
-	| CenterKick ATeam                   -- ^ team playing at home may start from the center
-	| Advantage ATeam                    -- ^ referee gives advantages to home-team
-	| OwnBallIllegally PlayerID          -- ^ ball was for the other team
-	| DisplacePlayers Displacements      -- ^ displaces all players at the provided position (used with free kicks)
-	| ContinueGame
-	| TellMessage String                 -- ^ no effect on match, message is displayed by referee
-	deriving (Show, Eq)
+    = ReprimandPlayer PlayerID Reprimand -- ^ player with given name receives reprimand
+    | Hands PlayerID                     -- ^ person is seen for doing hands
+    | TackleDetected PlayerID            -- ^ person is seen for doing tackle
+    | SchwalbeDetected PlayerID          -- ^ person is seen for doing schwalbe
+    | TheaterDetected PlayerID
+    | DangerousPlay PlayerID             -- ^ person is seen for doing dangerous actions
+    | GameOver                           -- ^ end of game
+    | PauseGame                          -- ^ game is paused
+    | AddTime ExtraTime                  -- ^ extra time is added to the game
+    | EndHalf                            -- ^ first half is over, teams go for a second half
+    | Goal ATeam                         -- ^ team playing at home has scored
+    | Offside PlayerID                   -- ^ player is offside at Home
+    | DirectFreeKick ATeam Position      -- ^ a direct free kick is granted for team home at given position
+    | GoalKick ATeam                     -- ^ a goal kick is granted for team home
+    | Corner ATeam Edge                  -- ^ a corner kick is granted for team home
+    | ThrowIn ATeam Position             -- ^ a throw in ball is granted for team home at given position
+    | Penalty ATeam                      -- ^ penalty at homeside
+    | CenterKick ATeam                   -- ^ team playing at home may start from the center
+    | Advantage ATeam                    -- ^ referee gives advantages to home-team
+    | OwnBallIllegally PlayerID          -- ^ ball was for the other team
+    | DisplacePlayers Displacements      -- ^ displaces all players at the provided position (used with free kicks)
+    | ContinueGame
+    | TellMessage String                 -- ^ no effect on match, message is displayed by referee
+    deriving (Show, Eq)
 
 isReprimandPlayer ∷ RefereeAction → Bool
 isReprimandPlayer (ReprimandPlayer _ _) = True
@@ -131,26 +131,26 @@ isGoal4ATeam _ _ = False
 -- | Position of a referee-granted action like a throw-in, a corner kick, etc.
 getKickPos ∷ Field → Half → RefereeAction → Maybe Position
 getKickPos field half (GoalKick team) = Just $ Position { py = (fwidth field)/2.0
-												   , px = if (team == Team1 && half == FirstHalf || team == Team2 && half == SecondHalf)
-															 then 5
-															 else (flength field) - 5 }
+                                                   , px = if (team == Team1 && half == FirstHalf || team == Team2 && half == SecondHalf)
+                                                             then 5
+                                                             else (flength field) - 5 }
 getKickPos field half (Corner team edge) = Just $ Position { px = if (team == Team1 && half == SecondHalf || team == Team2 && half == FirstHalf)
-															 then halfRadiusCornerKickArea
-															 else ((flength field) - halfRadiusCornerKickArea)
-												   , py = if (edge == North)
-															 then halfRadiusCornerKickArea
-															 else ((fwidth field) - halfRadiusCornerKickArea)
-												   }
-	where
-	halfRadiusCornerKickArea = radiusCornerKickArea / 2.0
+                                                             then halfRadiusCornerKickArea
+                                                             else ((flength field) - halfRadiusCornerKickArea)
+                                                   , py = if (edge == North)
+                                                             then halfRadiusCornerKickArea
+                                                             else ((fwidth field) - halfRadiusCornerKickArea)
+                                                   }
+    where
+    halfRadiusCornerKickArea = radiusCornerKickArea / 2.0
 getKickPos field half (Penalty team) = Just $ Position { py = (fwidth field)/2.0
-												   , px = if (team == Team1 && half == SecondHalf || team == Team2 && half == FirstHalf)
-															 then penaltySpotDepth
-															 else ((flength field) - penaltySpotDepth)
-												   }
+                                                   , px = if (team == Team1 && half == SecondHalf || team == Team2 && half == FirstHalf)
+                                                             then penaltySpotDepth
+                                                             else ((flength field) - penaltySpotDepth)
+                                                   }
 getKickPos field _ (CenterKick _) = Just $ Position { px = (flength field)/2.0
-												   , py = (fwidth field) /2.0
-												   }
+                                                   , py = (fwidth field) /2.0
+                                                   }
 getKickPos _ _ (DirectFreeKick _ pos) = Just pos
 getKickPos _ _ (ThrowIn _ pos) = Just pos
 getKickPos _ _ _ = Nothing
