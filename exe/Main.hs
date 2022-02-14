@@ -17,7 +17,7 @@ dynRecord ∷ FilePath → FilePath → IO ()
 dynRecord p1 p2 = do
     (loc1,name1) ← compileTeam p1
     (loc2,name2) ← compileTeam p2
-    record ← getDataFileName "SoccerFun/Tape/Record/Template.hs"
+    record ← getDataFileName "lib/SoccerFun/Tape/Record/Template.hs"
     exitCode ← system $ "runhaskell -i" ⧺ loc1 ⧺ " -i" ⧺ loc2 ⧺ " -DTEAM1=" ⧺ name1 ⧺ " -DTEAM2=" ⧺ name2 ⧺ " " ⧺ record
     when (exitCode ≢ ExitSuccess) (fail "Could merge teams, probably due to a type error.")
 

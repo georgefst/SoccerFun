@@ -16,7 +16,7 @@ Description:
 Category:       Game, Education, AI
 Data-Files:
   template/Main.hs template/Makefile template/Children/Child.hs template/Children/Team.hs
-  tournament/mkIndex.sh tournament/makeLoop.sh tournament/Makefile SoccerFun/Tape/Record/Template.hs
+  exe/mkIndex.sh exe/makeLoop.sh exe/Makefile lib/SoccerFun/Tape/Record/Template.hs
 
 Common common
   Default-Language: Haskell2010
